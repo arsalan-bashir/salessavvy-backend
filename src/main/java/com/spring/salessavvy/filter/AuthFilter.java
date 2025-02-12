@@ -31,7 +31,7 @@ public class AuthFilter implements Filter {
     };
 
     public AuthFilter(AuthService authService, UserRepository userRepository) {
-        System.out.println("Filter is called");
+        System.out.println("Filter Started");
         this.authService = authService;
         this.userRepository = userRepository;
     }

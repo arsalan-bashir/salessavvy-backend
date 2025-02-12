@@ -1,7 +1,6 @@
 package com.spring.salessavvy.entities;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -40,6 +39,9 @@ public class User {
 
     @Column
     private LocalDateTime updatedAt = LocalDateTime.now();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CartItems> cartItems = new ArrayList<>();
 
     public User() {
 
@@ -147,5 +149,4 @@ public class User {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
-
 }

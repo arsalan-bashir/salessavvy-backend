@@ -40,7 +40,6 @@ public class AuthService {
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new RuntimeException("Wrong password");
         }
-
         return user;
     }
 
