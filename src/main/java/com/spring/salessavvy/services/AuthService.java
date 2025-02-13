@@ -70,6 +70,11 @@ public class AuthService {
         return token;
     }
 
+    public void logout(User user) {
+        tokenRepository.deleteByUserId(user.getUserId());
+    }
+
+
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()

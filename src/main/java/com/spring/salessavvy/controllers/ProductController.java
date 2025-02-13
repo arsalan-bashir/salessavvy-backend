@@ -39,6 +39,7 @@ public class ProductController {
             userInfo.put("username", authenticatedUser.getUsername());
             userInfo.put("name", authenticatedUser.getFullname());
             userInfo.put("email", authenticatedUser.getEmail());
+            userInfo.put("phone", authenticatedUser.getPhone());
             userInfo.put("role", authenticatedUser.getRole().name());
             response.put("user", userInfo);
 

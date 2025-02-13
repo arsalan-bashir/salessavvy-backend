@@ -4,6 +4,7 @@ import com.spring.salessavvy.dtos.LoginDTO;
 import com.spring.salessavvy.entities.User;
 import com.spring.salessavvy.services.AuthService;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,6 +55,25 @@ public class AuthController {
         }
         catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Map<String, String>> logout(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            User user = (User) request.getAttribute("authenticatedUser");
+            authService.logout(user);
+            Cookie cookie = new Cookie("authToken", "");
+            cookie.setPath("/");
+            cookie.setHttpOnly(true);
+            cookie.setMaxAge(0);
+            response.addCookie(cookie);
+            Map<String, String> responseBody = new HashMap<>();
+            responseBody.put("message", "Logout successful");
+            return ResponseEntity.ok(responseBody);
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", "Logout failed ::: "+e.getMessage()));
         }
     }
 }
