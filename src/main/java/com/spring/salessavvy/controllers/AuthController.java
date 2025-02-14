@@ -76,4 +76,31 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", "Logout failed ::: "+e.getMessage()));
         }
     }
+
+    @GetMapping("/profile")
+    public ResponseEntity<User> getUserDetails(HttpServletRequest request) {
+        User user = (User) request.getAttribute("authenticatedUser");
+        if (user == null) {
+            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "UNAUTHORIZED USER"));
+        }
+        return ResponseEntity.ok(user);
+    }
+
+    @PutMapping("/profile/update")
+    public ResponseEntity<Object> updateUser(@RequestBody Map<String, Object> userDetails, HttpServletRequest request) {
+        try {
+            User authenticatedUser = (User) request.getAttribute("authenticatedUser");
+            if (authenticatedUser == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "UNAUTHORIZED USER"));
+            }
+            if (!userDetails.get("username").equals(authenticatedUser.getUsername())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "USERNAME DOES NOT MATCH"));
+            }
+            User updatedUser = authService.updateUser(authenticatedUser, userDetails);
+            return ResponseEntity.ok(updatedUser);
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", "Update failed :: "+e.getMessage()));
+        }
+    }
 }

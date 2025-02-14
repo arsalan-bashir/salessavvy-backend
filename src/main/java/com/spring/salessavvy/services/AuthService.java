@@ -7,6 +7,7 @@ import com.spring.salessavvy.repositories.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,8 +16,7 @@ import org.springframework.stereotype.Service;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class AuthService {
@@ -102,5 +102,21 @@ public class AuthService {
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
+    }
+
+    @Transactional
+    public User updateUser(User user, Map<String, Object> updateDetails) {
+        String newName = (String) updateDetails.get("fullname");
+        String newPhone = (String) updateDetails.get("phone");
+        String newEmail = (String) updateDetails.get("email");
+        int age = (Integer) updateDetails.get("age");
+
+        user.setFullname(newName);
+        user.setPhone(newPhone);
+        user.setEmail(newEmail);
+        user.setAge(age);
+        user.setUpdatedAt(LocalDateTime.now());
+        userRepository.save(user);
+        return user;
     }
 }
