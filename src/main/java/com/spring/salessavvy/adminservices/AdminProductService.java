@@ -58,7 +58,7 @@ public class AdminProductService {
 
     public void deleteProduct(Integer productId) {
         // Check if the product exists
-        if (!productRepository.existsById(productId)) {
+        if (productId == null || !productRepository.existsById(productId)) {
             throw new IllegalArgumentException("Product not found");
         }
 
